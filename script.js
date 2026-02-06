@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ensureFavicon();
     initFanEngine();
     initYelpaze();
+    initSlider();
     initProductDetail();
     initListingFilters();
 });
@@ -54,30 +55,12 @@ function initYelpaze() {
 
     const getOrbitBounds = () => {
         if (!orbit) return { size: 420 };
-        return {
-            size: Math.min(orbit.clientWidth, orbit.clientHeight)
-        };
-    };
-
-    const getRingPlan = (count, maxRadius, minRadius, itemWidth, gap, forceMultiRing = false) => {
-        const safeMax = Math.max(minRadius + 10, maxRadius);
-        const maxPerRing = Math.max(4, Math.floor((2 * Math.PI * safeMax) / (itemWidth + gap)));
-
-        if (!forceMultiRing && count <= maxPerRing) {
-            const radius = Math.max(minRadius, Math.min(safeMax, (itemWidth + gap) * count / (2 * Math.PI)));
-            return { outerCount: count, innerCount: 0, outerRadius: radius, innerRadius: null };
-        }
-
-        const targetOuter = forceMultiRing ? Math.round(count * 0.6) : Math.ceil(count * 0.6);
-        const outerCount = Math.min(maxPerRing, Math.max(6, targetOuter));
-        const innerCount = count - outerCount;
-        const outerRadius = Math.max(minRadius + 12, Math.min(safeMax, (itemWidth + gap) * outerCount / (2 * Math.PI)));
-        const innerRadius = Math.max(minRadius, Math.min(outerRadius * 0.68, safeMax - itemWidth * 0.6));
-        return { outerCount, innerCount, outerRadius, innerRadius };
+        return { size: Math.min(orbit.clientWidth, orbit.clientHeight) };
     };
 
     const layoutOrbitItems = (items, plan) => {
         if (!items.length) return;
+
         if (plan.rings?.length) {
             let offset = 0;
             plan.rings.forEach((ring) => {
@@ -94,6 +77,7 @@ function initYelpaze() {
 
         const startAngle = plan.outerStartAngle ?? -90;
         const { outerCount, innerCount, outerRadius, innerRadius } = plan;
+
         const outerStep = 360 / outerCount;
         items.slice(0, outerCount).forEach((item, index) => {
             const angle = startAngle + outerStep * index;
@@ -112,44 +96,96 @@ function initYelpaze() {
         }
     };
 
-    const getMultiRingPlan = (count, maxRadius, minRadius, itemWidth, itemHeight, gap) => {
-        const ringGap = Math.max(itemHeight + 24, 78);
-        const ringCount = 3;
-        const available = Math.max(0, maxRadius - minRadius);
-        const ringStep = ringCount > 1 ? Math.max(ringGap, available / (ringCount - 1)) : ringGap;
-        const startRadius = maxRadius;
-        const base = Math.floor(count / ringCount);
-        let remainder = count % ringCount;
-        const rings = [];
+    // ✅ İki ring (çok dağılmadan) planı — yoğun değilse
+    const getRingPlan = (count, maxRadius, minRadius, itemWidth, gap) => {
+        const safeMax = Math.max(minRadius + 8, maxRadius);
+        const maxPerRing = Math.max(4, Math.floor((2 * Math.PI * safeMax) / (itemWidth + gap)));
 
-        for (let i = 0; i < ringCount; i += 1) {
-            const radius = startRadius - ringStep * i;
-            if (radius < minRadius) break;
-            const targetCount = base + (remainder > 0 ? 1 : 0);
-            remainder = Math.max(0, remainder - 1);
-            const maxPerRing = Math.max(4, Math.floor((2 * Math.PI * radius) / (itemWidth + gap + 14)));
-            const countForRing = Math.min(targetCount, maxPerRing);
-            const step = 360 / countForRing;
-            const startAngle = -90 + (i % 2 === 1 ? step / 2 : 0);
-            rings.push({ count: countForRing, radius, startAngle });
+        if (count <= maxPerRing) {
+            const radius = Math.max(minRadius, Math.min(safeMax, (itemWidth + gap) * count / (2 * Math.PI)));
+            return { outerCount: count, innerCount: 0, outerRadius: radius, innerRadius: null };
         }
 
-        let assigned = rings.reduce((sum, ring) => sum + ring.count, 0);
-        let ringIndex = 0;
+        const outerCount = Math.min(maxPerRing, Math.max(7, Math.ceil(count * 0.62)));
+        const innerCount = count - outerCount;
+
+        const outerRadius = Math.max(minRadius + 10, Math.min(safeMax, (itemWidth + gap) * outerCount / (2 * Math.PI)));
+        const innerRadius = Math.max(minRadius, Math.min(outerRadius * 0.70, safeMax - itemWidth * 0.55));
+
+        return { outerCount, innerCount, outerRadius, innerRadius };
+    };
+
+    // ✅ Multi-ring: ring sayısını güvenli seç + eşit dağıt
+    const getMultiRingPlan = (count, maxRadius, minRadius, itemWidth, itemHeight, gap) => {
+        const isMobile = window.innerWidth <= 600;
+
+        // ring sayısını belirle
+        let ringCount = 3;
+        if (count <= 11) ringCount = 2;
+        if (count <= 7) ringCount = 1;
+        if (!isMobile && count >= 18) ringCount = 4; // masaüstü daha çok kaldırır
+
+        // ring gap (mobilde daha sıkı)
+        const ringGap = isMobile ? Math.max(itemHeight + 18, 62) : Math.max(itemHeight + 22, 78);
+
+        // uygun radius listesi üret
+        const radii = [];
+        for (let i = 0; i < ringCount; i += 1) {
+            const r = maxRadius - ringGap * i;
+            if (r >= minRadius) radii.push(r);
+        }
+
+        const finalRingCount = Math.max(1, radii.length);
+
+        // eşit dağıtım
+        const base = Math.floor(count / finalRingCount);
+        let rem = count % finalRingCount;
+
+        const rings = [];
+        for (let i = 0; i < finalRingCount; i += 1) {
+            const desired = base + (rem > 0 ? 1 : 0);
+            rem = Math.max(0, rem - 1);
+
+            const radius = radii[i];
+
+            // ring kapasitesi
+            const maxPerRing = Math.max(5, Math.floor((2 * Math.PI * radius) / (itemWidth + gap + 10)));
+            const ringCountSafe = Math.min(desired, maxPerRing);
+
+            const step = 360 / ringCountSafe;
+
+            // üst boşluk: ilk ring -90 yerine biraz sağa/sola kaydır
+            const startAngle = i === 0 ? -70 : (-90 + (i % 2 ? step / 2 : 0));
+
+            rings.push({ count: ringCountSafe, radius, startAngle });
+        }
+
+        // kalan var ise (kapasite izin verirse) ringlere sırayla ekle
+        let assigned = rings.reduce((s, r) => s + r.count, 0);
+        let idx = 0;
         while (assigned < count && rings.length) {
-            rings[ringIndex].count += 1;
+            rings[idx].count += 1;
             assigned += 1;
-            ringIndex = (ringIndex + 1) % rings.length;
+            idx = (idx + 1) % rings.length;
         }
 
         return { rings };
     };
 
     let cachedLayout = null;
+
     const applyOrbitLayout = () => {
+        // ✅ Merkez konumu: mobilde “aşırı aşağı” yapma (en büyük bug buydu)
         if (orbit) {
             const cx = orbit.clientWidth / 2;
-            const centerRatioY = engine.classList.contains("is-dense-panel") ? 0.58 : 0.5;
+            const isFocused = engine.classList.contains("is-focused");
+            const isDensePanel = engine.classList.contains("is-dense-panel");
+            const isMobile = window.innerWidth <= 600;
+
+            let centerRatioY = 0.50;
+            if (isFocused) centerRatioY = isMobile ? 0.56 : 0.54;
+            if (isDensePanel) centerRatioY = isMobile ? 0.58 : 0.56;
+
             const cy = orbit.clientHeight * centerRatioY;
             orbit.style.setProperty("--orbit-center-x", `${cx}px`);
             orbit.style.setProperty("--orbit-center-y", `${cy}px`);
@@ -157,11 +193,14 @@ function initYelpaze() {
 
         const { size } = getOrbitBounds();
         const centerRadius = centerNode && centerNode.offsetWidth ? centerNode.offsetWidth * 0.5 : 70;
+
         const cardSize = getItemSize(cards, 130);
         const gap = Math.max(12, Math.round(size * 0.035));
-        const maxRadius = Math.max(140, Math.min(280, size / 2 - cardSize.height / 2 - 16));
+
+        const maxRadius = Math.max(130, Math.min(280, size / 2 - cardSize.height / 2 - 14));
         const minRadius = centerRadius + cardSize.height / 2 + 14;
 
+        // ✅ Ana sayfa kartları: eşit dairesel dizilim (chord / sin)
         const requiredRadius = (cardSize.width + gap) / (2 * Math.sin(Math.PI / Math.max(cards.length, 4)));
         const radius = Math.max(minRadius, Math.min(maxRadius, requiredRadius));
         const scale = Math.min(1, maxRadius / requiredRadius);
@@ -172,18 +211,35 @@ function initYelpaze() {
         const cardPlan = { outerCount: cards.length, innerCount: 0, outerRadius: radius, innerRadius: null };
         layoutOrbitItems(cards, cardPlan);
 
-        cachedLayout = { maxRadius, minRadius, gap, outerRadius: cardPlan.outerRadius, innerRadius: cardPlan.outerRadius * 0.7 };
+        cachedLayout = { maxRadius, minRadius, gap, outerRadius: cardPlan.outerRadius };
 
+        // ✅ Panel linkleri
         panels.forEach((panel) => {
             const links = Array.from(panel.querySelectorAll(".yelpaze-link"));
             const linkSize = getItemSize(links, 120);
+
             const isDense = panel.classList.contains("is-dense");
-            const linkGap = isDense ? Math.max(gap + 8, Math.round(linkSize.height * 1.1)) : gap;
-            const linkMaxRadius = Math.max(120, isDense ? maxRadius - 8 : Math.min(cardPlan.outerRadius * 0.96, maxRadius - 10));
-            const linkMinRadius = Math.max(minRadius - 10, centerRadius + linkSize.height / 2 + 10);
+            const isMobile = window.innerWidth <= 600;
+
+            const linkGap = isDense
+                ? Math.max(gap + (isMobile ? 6 : 10), Math.round(linkSize.height * (isMobile ? 0.95 : 1.05)))
+                : gap;
+
+            const linkMaxRadius = Math.max(
+                110,
+                isDense ? (maxRadius - (isMobile ? 4 : 8)) : Math.min(cardPlan.outerRadius * 0.96, maxRadius - 10)
+            );
+
+            // ✅ KRİTİK: linkMinRadius’ı abartma (logo içine girme + orbit dışına çıkma)
+            const linkMinRadius = Math.max(
+                centerRadius + linkSize.height / 2 + (isMobile ? 18 : 22),
+                minRadius - 6
+            );
+
             const linkPlan = isDense
                 ? getMultiRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkSize.height, linkGap)
                 : getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkGap);
+
             layoutOrbitItems(links, linkPlan);
         });
     };
@@ -192,13 +248,13 @@ function initYelpaze() {
         engine.classList.remove("is-focused");
         engine.classList.remove("is-dense-panel");
         applyOrbitLayout();
+
         cards.forEach((card) => {
             card.classList.remove("active");
             card.setAttribute("aria-expanded", "false");
         });
-        panels.forEach((panel) => {
-            panel.classList.remove("active");
-        });
+
+        panels.forEach((panel) => panel.classList.remove("active"));
     };
 
     const activatePanel = (targetId) => {
@@ -206,72 +262,47 @@ function initYelpaze() {
         if (!panelExists) return;
 
         engine.classList.add("is-focused");
+
         cards.forEach((card) => {
             const active = card.dataset.target === targetId;
             card.classList.toggle("active", active);
             card.setAttribute("aria-expanded", active ? "true" : "false");
         });
-        panels.forEach((panel) => {
-            panel.classList.toggle("active", panel.id === targetId);
-        });
+
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === targetId));
 
         const activePanel = panels.find((panel) => panel.id === targetId);
-        if (activePanel) {
-            engine.classList.toggle("is-dense-panel", activePanel.classList.contains("is-dense"));
+        engine.classList.toggle("is-dense-panel", !!activePanel?.classList.contains("is-dense"));
+
+        // ✅ iki frame: ölçülerin oturması için
+        window.requestAnimationFrame(() => {
             applyOrbitLayout();
-            window.requestAnimationFrame(() => {
-                const links = Array.from(activePanel.querySelectorAll(".yelpaze-link"));
-                const { maxRadius, minRadius, gap, outerRadius, innerRadius } = cachedLayout || {};
-                const linkSize = getItemSize(links, 120);
-                const isDense = activePanel.classList.contains("is-dense");
-                const linkGap = isDense ? Math.max((gap || 16) + 8, Math.round(linkSize.height * 1.1)) : (gap || 16);
-                const linkMaxRadius = maxRadius ? (isDense ? maxRadius - 6 : Math.min(maxRadius - 6, outerRadius || maxRadius)) : 200;
-                const linkMinRadius = minRadius ? Math.max(minRadius - 8, linkSize.height / 2 + 70) : 140;
-                const linkPlan = isDense
-                    ? getMultiRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkSize.height, linkGap)
-                    : getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkGap);
-                layoutOrbitItems(links, linkPlan);
-            });
-        }
+            window.requestAnimationFrame(() => applyOrbitLayout());
+        });
     };
 
     if (logo) {
         logo.classList.add("is-spinning");
-        window.setTimeout(() => {
-            logo.classList.remove("is-spinning");
-        }, 2600);
+        window.setTimeout(() => logo.classList.remove("is-spinning"), 2600);
     }
 
-    window.requestAnimationFrame(applyOrbitLayout);
+    window.requestAnimationFrame(() => applyOrbitLayout());
 
     let resizeTimer = null;
     window.addEventListener("resize", () => {
         if (resizeTimer) window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(() => {
-            applyOrbitLayout();
-        }, 120);
+        resizeTimer = window.setTimeout(() => applyOrbitLayout(), 120);
     });
 
-    cards.forEach((card) => {
-        card.addEventListener("click", () => {
-            activatePanel(card.dataset.target);
-        });
-    });
-
-    backButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            resetPanels();
-        });
-    });
+    cards.forEach((card) => card.addEventListener("click", () => activatePanel(card.dataset.target)));
+    backButtons.forEach((button) => button.addEventListener("click", resetPanels));
 
     if (downButton) {
         downButton.addEventListener("click", (event) => {
             event.preventDefault();
             const targetSelector = downButton.dataset.target || "#home-sections";
             const target = document.querySelector(targetSelector);
-            if (target) {
-                target.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
         });
     }
 }
@@ -286,11 +317,8 @@ function initProductDetail() {
                 const currentQty = parseInt(quantityInput.value || "1", 10);
                 const action = button.getAttribute("data-action") || button.textContent.trim();
 
-                if (action === "plus" || action === "+") {
-                    quantityInput.value = currentQty + 1;
-                } else if ((action === "minus" || action === "-") && currentQty > 1) {
-                    quantityInput.value = currentQty - 1;
-                }
+                if (action === "plus" || action === "+") quantityInput.value = currentQty + 1;
+                else if ((action === "minus" || action === "-") && currentQty > 1) quantityInput.value = currentQty - 1;
             });
         });
     }
@@ -304,21 +332,12 @@ function initProductDetail() {
             if (!tabListItem) return;
 
             const targetTab = tabListItem.getAttribute("data-tab");
-
-            document.querySelectorAll(".tab-list li").forEach((li) => {
-                li.classList.remove("active");
-            });
-
+            document.querySelectorAll(".tab-list li").forEach((li) => li.classList.remove("active"));
             tabListItem.classList.add("active");
 
-            tabPanes.forEach((pane) => {
-                pane.classList.remove("active");
-            });
-
+            tabPanes.forEach((pane) => pane.classList.remove("active"));
             const activePane = document.getElementById(targetTab);
-            if (activePane) {
-                activePane.classList.add("active");
-            }
+            if (activePane) activePane.classList.add("active");
         });
     }
 
@@ -336,7 +355,6 @@ function initProductDetail() {
 function initListingFilters() {
     const filterPanel = document.querySelector(".listing-filters");
     const listingGrid = document.querySelector(".listing-grid");
-
     if (!filterPanel || !listingGrid) return;
 
     const cards = Array.from(listingGrid.querySelectorAll(".listing-card"));
@@ -361,31 +379,27 @@ function initListingFilters() {
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/ı/g, "i");
     };
+
     const parseNumber = (value) => {
         if (value === null || value === undefined || value === "") return null;
         const num = Number(String(value).replace(",", "."));
         return Number.isNaN(num) ? null : num;
     };
 
-    const buildState = () => {
-        return {
-            search: normalize(searchInput ? searchInput.value : ""),
-            categories: categoryInputs.filter((input) => input.checked).map((input) => input.value),
-            brand: brandSelect ? brandSelect.value : "",
-            model: modelSelect ? modelSelect.value : "",
-            min: parseNumber(priceMinInput ? priceMinInput.value : ""),
-            max: parseNumber(priceMaxInput ? priceMaxInput.value : "")
-        };
-    };
+    const buildState = () => ({
+        search: normalize(searchInput ? searchInput.value : ""),
+        categories: categoryInputs.filter((input) => input.checked).map((input) => input.value),
+        brand: brandSelect ? brandSelect.value : "",
+        model: modelSelect ? modelSelect.value : "",
+        min: parseNumber(priceMinInput ? priceMinInput.value : ""),
+        max: parseNumber(priceMaxInput ? priceMaxInput.value : "")
+    });
 
     const matchesCard = (card, state) => {
         const data = card.dataset;
         const cardCategories = (data.category || "").split(",").map((item) => item.trim()).filter(Boolean);
 
-        if (state.categories.length && !state.categories.some((cat) => cardCategories.includes(cat))) {
-            return false;
-        }
-
+        if (state.categories.length && !state.categories.some((cat) => cardCategories.includes(cat))) return false;
         if (state.brand && data.brand !== state.brand) return false;
         if (state.model && data.model !== state.model) return false;
 
@@ -397,14 +411,11 @@ function initListingFilters() {
             const hay = normalize(data.search || card.textContent);
             if (!hay.includes(state.search)) return false;
         }
-
         return true;
     };
 
     const updateCount = (visible) => {
-        if (resultCount) {
-            resultCount.textContent = `Toplam ${visible} ilan`;
-        }
+        if (resultCount) resultCount.textContent = `Toplam ${visible} ilan`;
     };
 
     const updateActiveFilters = (state) => {
@@ -412,9 +423,7 @@ function initListingFilters() {
         activeFilters.innerHTML = "";
         const labels = [];
 
-        if (state.search && searchInput && searchInput.value.trim()) {
-            labels.push(`Arama: ${searchInput.value.trim()}`);
-        }
+        if (state.search && searchInput && searchInput.value.trim()) labels.push(`Arama: ${searchInput.value.trim()}`);
 
         if (state.categories.length) {
             categoryInputs.filter((input) => input.checked).forEach((input) => {
@@ -433,13 +442,9 @@ function initListingFilters() {
         }
 
         if (state.min !== null || state.max !== null) {
-            if (state.min !== null && state.max !== null) {
-                labels.push(`Fiyat: ${state.min} - ${state.max}`);
-            } else if (state.min !== null) {
-                labels.push(`Fiyat: ${state.min}+`);
-            } else if (state.max !== null) {
-                labels.push(`Fiyat: 0 - ${state.max}`);
-            }
+            if (state.min !== null && state.max !== null) labels.push(`Fiyat: ${state.min} - ${state.max}`);
+            else if (state.min !== null) labels.push(`Fiyat: ${state.min}+`);
+            else if (state.max !== null) labels.push(`Fiyat: 0 - ${state.max}`);
         }
 
         labels.forEach((text) => {
@@ -520,9 +525,7 @@ function initListingFilters() {
 
     const resetFilters = () => {
         if (searchInput) searchInput.value = "";
-        categoryInputs.forEach((input) => {
-            input.checked = false;
-        });
+        categoryInputs.forEach((input) => (input.checked = false));
         if (brandSelect) brandSelect.value = "";
         if (modelSelect) modelSelect.value = "";
         if (priceMinInput) priceMinInput.value = "";
@@ -537,30 +540,11 @@ function initListingFilters() {
     if (priceMinInput) priceMinInput.addEventListener("input", applyFilters);
     if (priceMaxInput) priceMaxInput.addEventListener("input", applyFilters);
 
-    categoryInputs.forEach((input) => {
-        input.addEventListener("change", applyFilters);
-    });
-
+    categoryInputs.forEach((input) => input.addEventListener("change", applyFilters));
     if (brandSelect) brandSelect.addEventListener("change", applyFilters);
     if (modelSelect) modelSelect.addEventListener("change", applyFilters);
 
-    const params = new URLSearchParams(window.location.search);
-    const queryCategory = params.get("category");
-    const querySearch = params.get("search");
-
-    if (queryCategory) {
-        categoryInputs.forEach((input) => {
-            if (input.value === queryCategory) input.checked = true;
-        });
-    }
-
-    if (querySearch && searchInput) {
-        searchInput.value = querySearch;
-    }
-
-    if (!applyUrlFilters()) {
-        applyFilters();
-    }
+    if (!applyUrlFilters()) applyFilters();
 }
 
 function initFanEngine() {
@@ -612,7 +596,6 @@ function initFanEngine() {
         }
     ];
 
-
     const renderItems = (items, isChild = false) => {
         panel.dataset.level = isChild ? "child" : "root";
         wheel.classList.remove("is-switching");
@@ -633,9 +616,7 @@ function initFanEngine() {
                     return;
                 }
 
-                if (item.query) {
-                    window.location.href = `shop.html?${item.query}`;
-                }
+                if (item.query) window.location.href = `shop.html?${item.query}`;
             });
 
             wheel.appendChild(button);
@@ -656,7 +637,7 @@ function initFanEngine() {
     }
 
     renderItems(fanTree, false);
-}z
+}
 
 function initSlider() {
     const slider = document.querySelector(".slider");
@@ -677,12 +658,8 @@ function initSlider() {
 
     const showSlide = (index) => {
         current = (index + items.length) % items.length;
-        items.forEach((item, i) => {
-            item.classList.toggle("active", i === current);
-        });
-        dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === current);
-        });
+        items.forEach((item, i) => item.classList.toggle("active", i === current));
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === current));
     };
 
     const nextSlide = () => showSlide(current + 1);

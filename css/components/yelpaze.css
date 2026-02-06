@@ -1,7 +1,7 @@
 /*! yelpaze start */
 
 .yelpaze {
-    min-height: calc(100vh - 137px);
+    min-height: calc(100vh - 90px);
     padding: 20px 0 32px;
     background: radial-gradient(circle at top, #1f1108 0%, #0d0d0d 45%, #070707 100%);
     color: #fff;
@@ -43,15 +43,22 @@
     margin: 0 auto;
     width: 100%;
     position: relative;
+    background: rgba(12, 12, 12, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    padding: 28px 24px 36px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+    text-align: center;
 }
 
+/* Orbit alanı */
 .yelpaze-orbit {
     position: relative;
     width: 100%;
     height: clamp(420px, 60vh, 680px);
     margin: 0 auto;
 
-    /* Orbit merkezi */
+    /* Orbit merkezi (JS px basıyor) */
     --orbit-center-x: 50%;
     --orbit-center-y: 50%;
 
@@ -114,32 +121,119 @@
     font-size: 15px;
 }
 
-.yelpaze-engine {
-    background: rgba(12, 12, 12, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 28px;
-    padding: 28px 24px 36px;
-    position: relative;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
-    text-align: center;
-}
-
+/* ---------------------------
+   Down Button (İncelemeye Devam Et)
+---------------------------- */
 .yelpaze .down-button {
     position: absolute;
     left: 50%;
-    bottom: 24px;
+    bottom: 64px; /* ✅ en dip değil, biraz yukarı */
     transform: translateX(-50%);
     display: flex;
     justify-content: center;
     width: auto;
     margin: 0;
+    z-index: 6;
 }
 
 .yelpaze .down-button button {
     border: none;
+    background: transparent;
     cursor: pointer;
+
+    /* ✅ sağ/sol nefes */
+    padding: 12px 46px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+    transition: transform .2s ease;
 }
 
+.yelpaze .down-button button:hover {
+    transform: translateY(-2px);
+}
+
+.yelpaze .down-button .yazı {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,0.82);
+    margin: 0;
+    text-align: center;
+
+    min-width: 240px;
+
+    position: relative;
+    padding-bottom: 20px;
+
+    transition: color 0.25s ease, letter-spacing 0.25s ease;
+    animation: floatHint 2.8s ease-in-out infinite;
+}
+
+.yelpaze .down-button .yazı::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: 62px;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        rgba(255,55,0,0),
+        rgba(255,55,0,0.95),
+        rgba(255,55,0,0)
+    );
+    transform: translateX(-50%) scaleX(0.75);
+    opacity: 0.9;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.yelpaze .down-button .yazı::before {
+    content: "\F282"; /* bi-chevron-down */
+    font-family: "bootstrap-icons";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: rgba(255,255,255,0.78);
+    opacity: 0.95;
+    transition: color .25s ease, transform .25s ease;
+}
+
+.yelpaze .down-button button:hover .yazı {
+    color: #fff;
+    letter-spacing: 5px;
+}
+
+.yelpaze .down-button button:hover .yazı::after {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+}
+
+.yelpaze .down-button button:hover .yazı::before {
+    color: rgba(255,55,0,0.95);
+    transform: translateX(-50%) translateY(2px);
+}
+
+@keyframes floatHint {
+    0%   { transform: translateY(0); opacity: 0.75; }
+    50%  { transform: translateY(4px); opacity: 1; } /* ✅ daha az zıplama (border içine girmesin) */
+    100% { transform: translateY(0); opacity: 0.75; }
+}
+
+/* ---------------------------
+   Fan / Cards
+---------------------------- */
 .yelpaze-fan {
     position: absolute;
     inset: 0;
@@ -147,7 +241,6 @@
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-/* ✅ Kartlar: açı ve radius JS’ten gelsin (eşit dairesel dizilim) */
 .yelpaze-card {
     background: #131313;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -169,7 +262,6 @@
     left: var(--orbit-center-x);
     top: var(--orbit-center-y);
 
-    /* --angle ve --radius JS’ten geliyor; yoksa fallback var(--radius) */
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
         translate(var(--radius, 180px))
@@ -216,6 +308,9 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
+/* ---------------------------
+   Panels
+---------------------------- */
 .yelpaze-panels {
     position: absolute;
     inset: 0;
@@ -234,17 +329,19 @@
     display: block;
 }
 
+/* ✅ Başlık alanı biraz daha aşağı (mobilde çakışma azalır) */
 .yelpaze-panel-head {
     position: absolute;
-    top: 12px;
+    top: 18px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     width: min(520px, 90%);
     align-items: center;
-    z-index: 3;
+    z-index: 5;
+    pointer-events: auto;
 }
 
 .yelpaze-panel-head h3 {
@@ -259,16 +356,17 @@
 
 .yelpaze-back {
     align-self: center;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     color: #fff;
-    padding: 6px 12px;
+    padding: 7px 14px;
     border-radius: 999px;
     font-size: 12px;
     display: inline-flex;
     gap: 6px;
     align-items: center;
     cursor: pointer;
+    backdrop-filter: blur(8px);
 }
 
 .yelpaze-links {
@@ -277,7 +375,7 @@
     z-index: 2;
 }
 
-/* ✅ Linkler: Toprak İşleme gibi çok item varsa JS multi-ring dağıtıyor */
+/* Links (JS angle/radius basıyor) */
 .yelpaze-link {
     background: rgba(19, 19, 19, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -310,19 +408,14 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* Dense panels: çok link varsa pill'leri biraz küçült */
+/* Dense: çok link varsa pill küçült */
 .yelpaze-panel.is-dense .yelpaze-link {
-    width: clamp(100px, 12vw, 140px);
+    width: clamp(104px, 12vw, 148px);
     font-size: 10.5px;
     padding: 8px 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.yelpaze-engine.is-dense-panel .yelpaze-center {
-    transform: translate(-50%, -50%) scale(0.88);
-    opacity: 0.85;
 }
 
 /* Focus state */
@@ -355,6 +448,15 @@
     pointer-events: none;
 }
 
+/* Dense panel: merkez biraz küçülsün */
+.yelpaze-engine.is-dense-panel .yelpaze-center {
+    transform: translate(-50%, -50%) scale(0.88);
+    opacity: 0.88;
+}
+
+/* ---------------------------
+   Responsive
+---------------------------- */
 @media (max-width: 900px) {
     .yelpaze {
         padding: 18px 0 28px;
@@ -390,8 +492,12 @@
     }
 
     .yelpaze-panel.is-dense .yelpaze-link {
-        width: clamp(90px, 18vw, 130px);
+        width: clamp(92px, 18vw, 132px);
         font-size: 10px;
+    }
+
+    .yelpaze .down-button {
+        bottom: 58px;
     }
 }
 
@@ -426,8 +532,29 @@
     }
 
     .yelpaze-panel.is-dense .yelpaze-link {
-        width: clamp(84px, 22vw, 110px);
+        width: clamp(84px, 22vw, 112px);
         font-size: 9.5px;
+    }
+
+    /* ✅ mobilde head daha da aşağı + satır taşmasını azalt */
+    .yelpaze-panel-head {
+        top: 22px;
+        gap: 10px;
+    }
+
+    .yelpaze-panel-head h3 {
+        font-size: 20px;
+    }
+
+    /* ✅ mobilde down-button border içine girmesin */
+    .yelpaze .down-button {
+        bottom: 52px;
+    }
+
+    .yelpaze .down-button .yazı {
+        font-size: 14px;
+        min-width: 220px;
+        letter-spacing: 3.5px;
     }
 }
 
