@@ -31,14 +31,25 @@ function initYelpaze() {
     const panels = Array.from(engine.querySelectorAll(".yelpaze-panel"));
     const backButtons = Array.from(engine.querySelectorAll(".yelpaze-back"));
     const downButton = engine.closest(".yelpaze")?.querySelector(".down-button button");
+    const DENSE_THRESHOLD = 9;
+
+    panels.forEach((panel) => {
+        const links = panel.querySelectorAll(".yelpaze-link");
+        const isDense = links.length >= DENSE_THRESHOLD;
+        panel.classList.toggle("is-dense", isDense);
+    });
 
     const getItemSize = (items, fallback) => {
-        const sample = items.find((item) => item.offsetWidth > 0) || items[0];
-        if (!sample) return { width: fallback, height: fallback };
-        return {
-            width: Math.max(sample.offsetWidth, fallback),
-            height: Math.max(sample.offsetHeight, fallback)
-        };
+        if (!items.length) return { width: fallback, height: fallback };
+        let maxWidth = fallback;
+        let maxHeight = fallback;
+        items.forEach((item) => {
+            const width = Math.max(item.offsetWidth || 0, fallback);
+            const height = Math.max(item.offsetHeight || 0, fallback);
+            if (width > maxWidth) maxWidth = width;
+            if (height > maxHeight) maxHeight = height;
+        });
+        return { width: maxWidth, height: maxHeight };
     };
 
     const getOrbitBounds = () => {
@@ -48,16 +59,17 @@ function initYelpaze() {
         };
     };
 
-    const getRingPlan = (count, maxRadius, minRadius, itemWidth, gap) => {
+    const getRingPlan = (count, maxRadius, minRadius, itemWidth, gap, forceMultiRing = false) => {
         const safeMax = Math.max(minRadius + 10, maxRadius);
         const maxPerRing = Math.max(4, Math.floor((2 * Math.PI * safeMax) / (itemWidth + gap)));
 
-        if (count <= maxPerRing) {
+        if (!forceMultiRing && count <= maxPerRing) {
             const radius = Math.max(minRadius, Math.min(safeMax, (itemWidth + gap) * count / (2 * Math.PI)));
             return { outerCount: count, innerCount: 0, outerRadius: radius, innerRadius: null };
         }
 
-        const outerCount = Math.min(maxPerRing, Math.ceil(count * 0.6));
+        const targetOuter = forceMultiRing ? Math.round(count * 0.6) : Math.ceil(count * 0.6);
+        const outerCount = Math.min(maxPerRing, Math.max(6, targetOuter));
         const innerCount = count - outerCount;
         const outerRadius = Math.max(minRadius + 12, Math.min(safeMax, (itemWidth + gap) * outerCount / (2 * Math.PI)));
         const innerRadius = Math.max(minRadius, Math.min(outerRadius * 0.68, safeMax - itemWidth * 0.6));
@@ -66,7 +78,21 @@ function initYelpaze() {
 
     const layoutOrbitItems = (items, plan) => {
         if (!items.length) return;
-        const startAngle = -90;
+        if (plan.rings?.length) {
+            let offset = 0;
+            plan.rings.forEach((ring) => {
+                const step = 360 / ring.count;
+                items.slice(offset, offset + ring.count).forEach((item, index) => {
+                    const angle = ring.startAngle + step * index;
+                    item.style.setProperty("--angle", `${angle}deg`);
+                    item.style.setProperty("--radius", `${Math.round(ring.radius)}px`);
+                });
+                offset += ring.count;
+            });
+            return;
+        }
+
+        const startAngle = plan.outerStartAngle ?? -90;
         const { outerCount, innerCount, outerRadius, innerRadius } = plan;
         const outerStep = 360 / outerCount;
         items.slice(0, outerCount).forEach((item, index) => {
@@ -77,19 +103,54 @@ function initYelpaze() {
 
         if (innerCount > 0 && innerRadius) {
             const innerStep = 360 / innerCount;
+            const innerStart = plan.innerStartAngle ?? (startAngle + outerStep / 2);
             items.slice(outerCount).forEach((item, index) => {
-                const angle = startAngle + innerStep * index + innerStep / 2;
+                const angle = innerStart + innerStep * index;
                 item.style.setProperty("--angle", `${angle}deg`);
                 item.style.setProperty("--radius", `${Math.round(innerRadius)}px`);
             });
         }
     };
 
+    const getMultiRingPlan = (count, maxRadius, minRadius, itemWidth, itemHeight, gap) => {
+        const ringGap = Math.max(itemHeight + 24, 78);
+        const ringCount = 3;
+        const available = Math.max(0, maxRadius - minRadius);
+        const ringStep = ringCount > 1 ? Math.max(ringGap, available / (ringCount - 1)) : ringGap;
+        const startRadius = maxRadius;
+        const base = Math.floor(count / ringCount);
+        let remainder = count % ringCount;
+        const rings = [];
+
+        for (let i = 0; i < ringCount; i += 1) {
+            const radius = startRadius - ringStep * i;
+            if (radius < minRadius) break;
+            const targetCount = base + (remainder > 0 ? 1 : 0);
+            remainder = Math.max(0, remainder - 1);
+            const maxPerRing = Math.max(4, Math.floor((2 * Math.PI * radius) / (itemWidth + gap + 14)));
+            const countForRing = Math.min(targetCount, maxPerRing);
+            const step = 360 / countForRing;
+            const startAngle = -90 + (i % 2 === 1 ? step / 2 : 0);
+            rings.push({ count: countForRing, radius, startAngle });
+        }
+
+        let assigned = rings.reduce((sum, ring) => sum + ring.count, 0);
+        let ringIndex = 0;
+        while (assigned < count && rings.length) {
+            rings[ringIndex].count += 1;
+            assigned += 1;
+            ringIndex = (ringIndex + 1) % rings.length;
+        }
+
+        return { rings };
+    };
+
     let cachedLayout = null;
     const applyOrbitLayout = () => {
         if (orbit) {
             const cx = orbit.clientWidth / 2;
-            const cy = orbit.clientHeight / 2;
+            const centerRatioY = engine.classList.contains("is-dense-panel") ? 0.58 : 0.5;
+            const cy = orbit.clientHeight * centerRatioY;
             orbit.style.setProperty("--orbit-center-x", `${cx}px`);
             orbit.style.setProperty("--orbit-center-y", `${cy}px`);
         }
@@ -116,15 +177,21 @@ function initYelpaze() {
         panels.forEach((panel) => {
             const links = Array.from(panel.querySelectorAll(".yelpaze-link"));
             const linkSize = getItemSize(links, 120);
-            const linkMaxRadius = Math.max(120, Math.min(cardPlan.outerRadius * 0.96, maxRadius - 10));
+            const isDense = panel.classList.contains("is-dense");
+            const linkGap = isDense ? Math.max(gap + 8, Math.round(linkSize.height * 1.1)) : gap;
+            const linkMaxRadius = Math.max(120, isDense ? maxRadius - 8 : Math.min(cardPlan.outerRadius * 0.96, maxRadius - 10));
             const linkMinRadius = Math.max(minRadius - 10, centerRadius + linkSize.height / 2 + 10);
-            const linkPlan = getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, gap);
+            const linkPlan = isDense
+                ? getMultiRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkSize.height, linkGap)
+                : getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkGap);
             layoutOrbitItems(links, linkPlan);
         });
     };
 
     const resetPanels = () => {
         engine.classList.remove("is-focused");
+        engine.classList.remove("is-dense-panel");
+        applyOrbitLayout();
         cards.forEach((card) => {
             card.classList.remove("active");
             card.setAttribute("aria-expanded", "false");
@@ -150,13 +217,19 @@ function initYelpaze() {
 
         const activePanel = panels.find((panel) => panel.id === targetId);
         if (activePanel) {
+            engine.classList.toggle("is-dense-panel", activePanel.classList.contains("is-dense"));
+            applyOrbitLayout();
             window.requestAnimationFrame(() => {
                 const links = Array.from(activePanel.querySelectorAll(".yelpaze-link"));
                 const { maxRadius, minRadius, gap, outerRadius, innerRadius } = cachedLayout || {};
                 const linkSize = getItemSize(links, 120);
-                const linkMaxRadius = maxRadius ? Math.min(maxRadius - 6, outerRadius || maxRadius) : 200;
+                const isDense = activePanel.classList.contains("is-dense");
+                const linkGap = isDense ? Math.max((gap || 16) + 8, Math.round(linkSize.height * 1.1)) : (gap || 16);
+                const linkMaxRadius = maxRadius ? (isDense ? maxRadius - 6 : Math.min(maxRadius - 6, outerRadius || maxRadius)) : 200;
                 const linkMinRadius = minRadius ? Math.max(minRadius - 8, linkSize.height / 2 + 70) : 140;
-                const linkPlan = getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, gap || 16);
+                const linkPlan = isDense
+                    ? getMultiRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkSize.height, linkGap)
+                    : getRingPlan(links.length, linkMaxRadius, linkMinRadius, linkSize.width, linkGap);
                 layoutOrbitItems(links, linkPlan);
             });
         }

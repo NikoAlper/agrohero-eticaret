@@ -2,7 +2,7 @@
 
 .yelpaze {
     min-height: calc(100vh - 137px);
-    padding: 40px 0;
+    padding: 20px 0 32px;
     background: radial-gradient(circle at top, #1f1108 0%, #0d0d0d 45%, #070707 100%);
     color: #fff;
     position: relative;
@@ -33,7 +33,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 16px;
     min-height: 100%;
 }
 
@@ -49,15 +50,13 @@
     width: 100%;
     height: clamp(420px, 60vh, 680px);
     margin: 0 auto;
+
+    /* Orbit merkezi */
     --orbit-center-x: 50%;
     --orbit-center-y: 50%;
 
-    /* ✅ PC + mobil uyumlu orbit radius */
+    /* JS yoksa fallback radius */
     --radius: clamp(150px, 18vw, 260px);
-
-    /* ✅ GÖRSEL EŞİT MESAFE: axis/diag ayrı radius */
-    --radius-axis: var(--radius);
-    --radius-diag: calc(var(--radius) * 0.7);
 }
 
 .yelpaze-center {
@@ -148,6 +147,7 @@
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
+/* ✅ Kartlar: açı ve radius JS’ten gelsin (eşit dairesel dizilim) */
 .yelpaze-card {
     background: #131313;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -164,14 +164,18 @@
     gap: 8px;
     align-items: center;
     justify-content: center;
+
     position: absolute;
     left: var(--orbit-center-x);
     top: var(--orbit-center-y);
+
+    /* --angle ve --radius JS’ten geliyor; yoksa fallback var(--radius) */
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
-        translate(var(--card-radius, var(--radius, 180px)))
+        translate(var(--radius, 180px))
         rotate(calc(-1 * var(--angle, 0deg)))
         scale(var(--orbit-scale, 1));
+
     transform-origin: center;
     transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
@@ -179,22 +183,12 @@
 .yelpaze-card:hover {
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
-        translate(calc(var(--card-radius, var(--radius, 180px)) + 10px))
+        translate(calc(var(--radius, 180px) + 10px))
         rotate(calc(-1 * var(--angle, 0deg)))
         scale(var(--orbit-scale-hover, 1.03));
     border-color: rgba(255, 55, 0, 0.55);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
 }
-
-/* ✅ INLINE --angle değerlerini override ederek 8 kartı 360° eşit dağıt + görsel boşluk eşitle */
-.yelpaze-fan .yelpaze-card:nth-child(1) { --angle: -90deg !important; --card-radius: var(--radius-axis) !important; } /* üst */
-.yelpaze-fan .yelpaze-card:nth-child(2) { --angle: -45deg !important; --card-radius: var(--radius-diag) !important; } /* sağ-üst */
-.yelpaze-fan .yelpaze-card:nth-child(3) { --angle:   0deg !important; --card-radius: var(--radius-axis) !important; } /* sağ */
-.yelpaze-fan .yelpaze-card:nth-child(4) { --angle:  45deg !important; --card-radius: var(--radius-diag) !important; } /* sağ-alt */
-.yelpaze-fan .yelpaze-card:nth-child(5) { --angle:  90deg !important; --card-radius: var(--radius-axis) !important; } /* alt */
-.yelpaze-fan .yelpaze-card:nth-child(6) { --angle: 135deg !important; --card-radius: var(--radius-diag) !important; } /* sol-alt */
-.yelpaze-fan .yelpaze-card:nth-child(7) { --angle: 180deg !important; --card-radius: var(--radius-axis) !important; } /* sol */
-.yelpaze-fan .yelpaze-card:nth-child(8) { --angle: 225deg !important; --card-radius: var(--radius-diag) !important; } /* sol-üst */
 
 .yelpaze-icon {
     width: 42px;
@@ -283,6 +277,7 @@
     z-index: 2;
 }
 
+/* ✅ Linkler: Toprak İşleme gibi çok item varsa JS multi-ring dağıtıyor */
 .yelpaze-link {
     background: rgba(19, 19, 19, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -296,13 +291,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     position: absolute;
     left: var(--orbit-center-x);
     top: var(--orbit-center-y);
+
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
-        translate(var(--card-radius, var(--radius, 180px)))
+        translate(var(--radius, 180px))
         rotate(calc(-1 * var(--angle, 0deg)));
+
     transform-origin: center;
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -312,12 +310,27 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* ✅ Focus state'lerde de card-radius kullan ki oran bozulmasın */
+/* Dense panels: çok link varsa pill'leri biraz küçült */
+.yelpaze-panel.is-dense .yelpaze-link {
+    width: clamp(100px, 12vw, 140px);
+    font-size: 10.5px;
+    padding: 8px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yelpaze-engine.is-dense-panel .yelpaze-center {
+    transform: translate(-50%, -50%) scale(0.88);
+    opacity: 0.85;
+}
+
+/* Focus state */
 .yelpaze-engine.is-focused .yelpaze-card {
     opacity: 0.25;
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
-        translate(var(--card-radius, var(--radius, 180px)))
+        translate(var(--radius, 180px))
         rotate(calc(-1 * var(--angle, 0deg)))
         scale(0.96);
 }
@@ -326,7 +339,7 @@
     opacity: 1;
     transform: translate(-50%, -50%)
         rotate(var(--angle, 0deg))
-        translate(var(--card-radius, var(--radius, 180px)))
+        translate(var(--radius, 180px))
         rotate(calc(-1 * var(--angle, 0deg)))
         scale(1.02);
     border-color: rgba(255, 55, 0, 0.7);
@@ -344,7 +357,7 @@
 
 @media (max-width: 900px) {
     .yelpaze {
-        padding: 28px 0;
+        padding: 18px 0 28px;
     }
 
     .yelpaze-hero {
@@ -361,9 +374,7 @@
 
     .yelpaze-orbit {
         height: clamp(360px, 58vh, 560px);
-        --radius: clamp(125px, 22vw, 210px); /* ✅ tablet */
-        --radius-axis: var(--radius);
-        --radius-diag: calc(var(--radius) * 1.18);
+        --radius: clamp(125px, 22vw, 210px);
     }
 
     .yelpaze-card {
@@ -376,6 +387,11 @@
     .yelpaze-link {
         width: clamp(100px, 22vw, 150px);
         font-size: 11px;
+    }
+
+    .yelpaze-panel.is-dense .yelpaze-link {
+        width: clamp(90px, 18vw, 130px);
+        font-size: 10px;
     }
 }
 
@@ -390,9 +406,7 @@
 
     .yelpaze-orbit {
         height: clamp(300px, 60vh, 520px);
-        --radius: clamp(105px, 30vw, 170px); /* ✅ telefon */
-        --radius-axis: var(--radius);
-        --radius-diag: calc(var(--radius) * 1.18);
+        --radius: clamp(105px, 30vw, 170px);
     }
 
     .yelpaze-card {
@@ -409,6 +423,11 @@
     .yelpaze-link {
         width: clamp(90px, 24vw, 120px);
         font-size: 10px;
+    }
+
+    .yelpaze-panel.is-dense .yelpaze-link {
+        width: clamp(84px, 22vw, 110px);
+        font-size: 9.5px;
     }
 }
 
