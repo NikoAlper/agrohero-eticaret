@@ -51,6 +51,13 @@
     margin: 0 auto;
     --orbit-center-x: 50%;
     --orbit-center-y: 50%;
+
+    /* ✅ PC + mobil uyumlu orbit radius */
+    --radius: clamp(150px, 18vw, 260px);
+
+    /* ✅ GÖRSEL EŞİT MESAFE: axis/diag ayrı radius */
+    --radius-axis: var(--radius);
+    --radius-diag: calc(var(--radius) * 0.7);
 }
 
 .yelpaze-center {
@@ -82,15 +89,9 @@
 }
 
 @keyframes logoSpin {
-    0% {
-        transform: rotate(0deg) scale(0.95);
-    }
-    70% {
-        transform: rotate(320deg) scale(1.05);
-    }
-    100% {
-        transform: rotate(360deg) scale(1);
-    }
+    0% { transform: rotate(0deg) scale(0.95); }
+    70% { transform: rotate(320deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
 }
 
 .yelpaze-kicker {
@@ -166,16 +167,34 @@
     position: absolute;
     left: var(--orbit-center-x);
     top: var(--orbit-center-y);
-    transform: rotate(var(--angle, 0deg)) translate(var(--radius, 180px)) rotate(calc(-1 * var(--angle, 0deg))) scale(var(--orbit-scale, 1));
+    transform: translate(-50%, -50%)
+        rotate(var(--angle, 0deg))
+        translate(var(--card-radius, var(--radius, 180px)))
+        rotate(calc(-1 * var(--angle, 0deg)))
+        scale(var(--orbit-scale, 1));
     transform-origin: center;
     transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .yelpaze-card:hover {
-    transform: rotate(var(--angle, 0deg)) translate(var(--radius, 180px)) rotate(calc(-1 * var(--angle, 0deg))) scale(var(--orbit-scale-hover, 1.03));
+    transform: translate(-50%, -50%)
+        rotate(var(--angle, 0deg))
+        translate(calc(var(--card-radius, var(--radius, 180px)) + 10px))
+        rotate(calc(-1 * var(--angle, 0deg)))
+        scale(var(--orbit-scale-hover, 1.03));
     border-color: rgba(255, 55, 0, 0.55);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
 }
+
+/* ✅ INLINE --angle değerlerini override ederek 8 kartı 360° eşit dağıt + görsel boşluk eşitle */
+.yelpaze-fan .yelpaze-card:nth-child(1) { --angle: -90deg !important; --card-radius: var(--radius-axis) !important; } /* üst */
+.yelpaze-fan .yelpaze-card:nth-child(2) { --angle: -45deg !important; --card-radius: var(--radius-diag) !important; } /* sağ-üst */
+.yelpaze-fan .yelpaze-card:nth-child(3) { --angle:   0deg !important; --card-radius: var(--radius-axis) !important; } /* sağ */
+.yelpaze-fan .yelpaze-card:nth-child(4) { --angle:  45deg !important; --card-radius: var(--radius-diag) !important; } /* sağ-alt */
+.yelpaze-fan .yelpaze-card:nth-child(5) { --angle:  90deg !important; --card-radius: var(--radius-axis) !important; } /* alt */
+.yelpaze-fan .yelpaze-card:nth-child(6) { --angle: 135deg !important; --card-radius: var(--radius-diag) !important; } /* sol-alt */
+.yelpaze-fan .yelpaze-card:nth-child(7) { --angle: 180deg !important; --card-radius: var(--radius-axis) !important; } /* sol */
+.yelpaze-fan .yelpaze-card:nth-child(8) { --angle: 225deg !important; --card-radius: var(--radius-diag) !important; } /* sol-üst */
 
 .yelpaze-icon {
     width: 42px;
@@ -280,7 +299,10 @@
     position: absolute;
     left: var(--orbit-center-x);
     top: var(--orbit-center-y);
-    transform: rotate(var(--angle, 0deg)) translate(var(--radius, 180px)) rotate(calc(-1 * var(--angle, 0deg)));
+    transform: translate(-50%, -50%)
+        rotate(var(--angle, 0deg))
+        translate(var(--card-radius, var(--radius, 180px)))
+        rotate(calc(-1 * var(--angle, 0deg)));
     transform-origin: center;
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -290,14 +312,23 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
+/* ✅ Focus state'lerde de card-radius kullan ki oran bozulmasın */
 .yelpaze-engine.is-focused .yelpaze-card {
     opacity: 0.25;
-    transform: rotate(var(--angle, 0deg)) translate(var(--radius, 180px)) rotate(calc(-1 * var(--angle, 0deg))) scale(0.96);
+    transform: translate(-50%, -50%)
+        rotate(var(--angle, 0deg))
+        translate(var(--card-radius, var(--radius, 180px)))
+        rotate(calc(-1 * var(--angle, 0deg)))
+        scale(0.96);
 }
 
 .yelpaze-engine.is-focused .yelpaze-card.active {
     opacity: 1;
-    transform: rotate(var(--angle, 0deg)) translate(var(--radius, 180px)) rotate(calc(-1 * var(--angle, 0deg))) scale(1.02);
+    transform: translate(-50%, -50%)
+        rotate(var(--angle, 0deg))
+        translate(var(--card-radius, var(--radius, 180px)))
+        rotate(calc(-1 * var(--angle, 0deg)))
+        scale(1.02);
     border-color: rgba(255, 55, 0, 0.7);
 }
 
@@ -330,6 +361,9 @@
 
     .yelpaze-orbit {
         height: clamp(360px, 58vh, 560px);
+        --radius: clamp(125px, 22vw, 210px); /* ✅ tablet */
+        --radius-axis: var(--radius);
+        --radius-diag: calc(var(--radius) * 1.18);
     }
 
     .yelpaze-card {
@@ -356,6 +390,9 @@
 
     .yelpaze-orbit {
         height: clamp(300px, 60vh, 520px);
+        --radius: clamp(105px, 30vw, 170px); /* ✅ telefon */
+        --radius-axis: var(--radius);
+        --radius-diag: calc(var(--radius) * 1.18);
     }
 
     .yelpaze-card {
