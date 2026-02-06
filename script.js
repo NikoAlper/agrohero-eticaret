@@ -87,9 +87,9 @@ function initYelpaze() {
 
     let cachedLayout = null;
     const applyOrbitLayout = () => {
-        if (orbit && centerNode) {
-            const cx = centerNode.offsetLeft + centerNode.offsetWidth / 2;
-            const cy = centerNode.offsetTop + centerNode.offsetHeight / 2;
+        if (orbit) {
+            const cx = orbit.clientWidth / 2;
+            const cy = orbit.clientHeight / 2;
             orbit.style.setProperty("--orbit-center-x", `${cx}px`);
             orbit.style.setProperty("--orbit-center-y", `${cy}px`);
         }
