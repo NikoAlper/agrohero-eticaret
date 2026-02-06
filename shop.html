@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroHero | Tüm Ürünler</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+<header>
+        <div class="global-notification">
+            <div class="container">
+                <p>
+                    Ekim ayında %50 indirimler için hemen
+                    <a href="sayfa.html">Satın Al</a>
+                </p>
+            </div>
+        </div>
+        <div class="header-row">
+            <div class="container">
+                <div class="header-wrapper">
+                    <div class="header-mobile">
+                        <i class="bi bi-list"></i>
+                    </div>
+                    <div class="header-left">
+                        <a href="#" class="logo"><img src="img/logo/agrohero-logo-256.png" alt="AgroHero"></a>
+                    </div>
+                    <div class="header-center">
+                        <nav class="navigation">
+                            <ul class="menu-list">
+                                <li class="menu-list-item">
+                                    <a href="index.html" class="menu-link">
+                                        Ana Sayfa
+                                    </a>
+                                </li>
+                                <li class="menu-list-item megamenu-wrapper">
+                                    <a href="shop.html" class="menu-link">
+                                        Katagoriler
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                    <div class="menu-dropdown-wrapper">
+                                        <div class="menu-dropdown-megamenu">
+                                            <div class="megamenu-links">
+                                                <div class="megamenu-products">
+                                                    <h3 class="megamenu-products-title">
+                                                        Ürün Sıralaması 1
+                                                    </h3>
+                                                    <ul class="megamenu-menu-list">
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="megamenu-products">
+                                                    <h3 class="megamenu-products-title">
+                                                        Ürün Sıralaması 2
+                                                    </h3>
+                                                    <ul class="megamenu-menu-list">
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 2</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 3</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 4</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="megamenu-products">
+                                                    <h3 class="megamenu-products-title">
+                                                        Ürün Sıralaması 3
+                                                    </h3>
+                                                    <ul class="megamenu-menu-list">
+                                                        <li>
+                                                            <a href="#">Deneme 1</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Deneme 2</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="megamenu-single">
+                                                <a href="#">
+                                                    <img src="img/shop-foto.png" alt="">
+                                                </a>
+                                                <h3 class="megamenu-single-title">Tarım Öz Teknolojisine Katıl</h3>
+                                                <h4 class="megamenu-single-subtitle">Kompakto serisini inceleyin</h4>
+                                                <a href="#" class="btn-ozel-mega">Hemen
+                                                    Al</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="menu-list-item">
+                                    <a href="page.html" class="menu-link">
+                                        Blog
+                                    </a>
+                                </li>
+                                <li class="menu-list-item">
+                                    <a href="#" class="menu-link">
+                                        İletişim
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <i class="bi-x-circle"></i>
+                    </div>
+                    <div class="header-right">
+                        <div class="header-right-links">
+                            <a href="#" class="header-account">
+                                <i class="bi bi-person"></i>
+                            </a>
+                            <button class="toggle-button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                            <a href="#">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                            <div class="header-cart">
+                                <a href="#" class="header-cart-link">
+                                    <i class="bi bi-bag">
+                                        <span class="header-cart-count">
+                                            0
+                                        </span>
+                                    </i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<!--!modal search start-->
+
+    <div class="modal-search">
+        <div class="modal-wrapper">
+            <h3 class="modal-title">Ürün arayın</h3>
+            <p class="modal-text">Hangi ürünü arıyorsunuz ?</p>
+            <form class="search-form">
+                <input type="text" placeholder="Ürün Arayın">
+                <button>
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            <div class="search-results">
+                <div class="search-heading">
+                    <h3>Arama Sonuçları</h3>
+                </div>
+                <div class="results">
+                    <a href="#" class="result-item">
+                        <img src="img/linemega.png" class="search-thumb" alt="">
+                        <div class="search-info">
+                            <h4>En Trend Yedek Parça 1</h4>
+                            <span class="search-yp">Parça Kodu: TÖS-YP1</span>
+                            <span class="search-price">1000₺</span>
+                        </div>
+                    </a>
+                    <a href="#" class="result-item">
+                        <img src="img/linemega.png" class="search-thumb" alt="">
+                        <div class="search-info">
+                            <h4>En Trend Yedek Parça 1</h4>
+                            <span class="search-yp">Parça Kodu: TÖS-YP1</span>
+                            <span class="search-price">1000₺</span>
+                        </div>
+                    </a>
+                    <a href="#" class="result-item">
+                        <img src="img/linemega.png" class="search-thumb" alt="">
+                        <div class="search-info">
+                            <h4>En Trend Yedek Parça 1</h4>
+                            <span class="search-yp">Parça Kodu: TÖS-YP1</span>
+                            <span class="search-price">1000₺</span>
+                        </div>
+                    </a>
+                    <a href="#" class="result-item">
+                        <img src="img/linemega.png" class="search-thumb" alt="">
+                        <div class="search-info">
+                            <h4>En Trend Yedek Parça 1</h4>
+                            <span class="search-yp">Parça Kodu: TÖS-YP1</span>
+                            <span class="search-price">1000₺</span>
+                        </div>
+                    </a>
+                    <a href="#" class="result-item">
+                        <img src="img/linemega.png" class="search-thumb" alt="">
+                        <div class="search-info">
+                            <h4>En Trend Yedek Parça 1</h4>
+                            <span class="search-yp">Parça Kodu: TÖS-YP1</span>
+                            <span class="search-price">1000₺</span>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            <i class="bi bi-x-circle"></i>
+        </div>
+    </div>
+
+    <!--!modal search end-->
+
+    <main class="listing-page">
+        <section class="listing-hero">
+            <div class="container">
+                <div class="listing-hero-inner">
+                    <div class="listing-hero-text">
+                        <span class="listing-kicker">Tüm Ürünler</span>
+                        <h1>Tarım makinesi, yedek parça ve ekipman pazarında tek adres</h1>
+                        <p>AgroHero, farklı markaların makinelerini ve yedek parçalarını tek listede toplar. İhtiyacına göre filtrele, hızlıca karşılaştır ve güvenle satın al.</p>
+                        <div class="listing-hero-actions">
+                            <a href="#ilanlar" class="btn btn-primary btn-lg">İlanlara Göz At</a>
+                            <a href="#filtreler" class="btn2 btn-lg">Hızlı Filtreler</a>
+                        </div>
+                    </div>
+                    <div class="listing-hero-card">
+                        <h3>Öne Çıkan Kategoriler</h3>
+                        <div class="listing-hero-tags">
+                            <a href="#">Toprak İşleme</a>
+                            <a href="#">Ekim &amp; Gübreleme</a>
+                            <a href="#">Hasat &amp; Harman</a>
+                            <a href="#">Yedek Parça</a>
+                            <a href="#">Hayvancılık</a>
+                            <a href="#">Otomatik Dümenleme</a>
+                        </div>
+                        <p class="listing-hero-note">Kurum içi stoktan hızlı teslimat, garanti ve teknik destek avantajlarıyla tüm ilanlar tek vitrinde.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="listing-main" id="ilanlar">
+            <div class="container">
+                <div class="listing-layout">
+                    <aside class="listing-filters" id="filtreler">
+                        <div class="filter-header">
+                            <h3>Filtreler</h3>
+                            <button class="filter-reset" type="button" id="filter-reset">Temizle</button>
+                        </div>
+
+                        <div class="filter-block">
+                            <label>Arama</label>
+                            <input type="text" id="filter-search" placeholder="Marka, model, parça kodu">
+                        </div>
+
+                        <div class="filter-block">
+                            <h4>Kategori</h4>
+                            <div class="filter-list">
+                                <label><input type="checkbox" name="category" value="toprak-isleme"> Toprak İşleme</label>
+                                <label><input type="checkbox" name="category" value="ekim-gubreleme"> Ekim &amp; Gübreleme</label>
+                                <label><input type="checkbox" name="category" value="hasat-harman"> Hasat &amp; Harman</label>
+                                <label><input type="checkbox" name="category" value="yedek-parca"> Yedek Parça</label>
+                                <label><input type="checkbox" name="category" value="hayvancilik"> Hayvancılık</label>
+                            </div>
+                        </div>
+
+                        <div class="filter-block">
+                            <label>Marka</label>
+                            <select id="filter-brand">
+                                <option value="">Seçiniz</option>
+                                <option value="tarimoz">TarımÖz</option>
+                                <option value="doganlar-tarim">Doğanlar Tarım</option>
+                                <option value="agrohero">AgroHero</option>
+                                <option value="cakirogullari">Çakıroğulları</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-block">
+                            <label>Model</label>
+                            <select id="filter-model">
+                                <option value="">Seçiniz</option>
+                                <option value="thm-22">THM-22</option>
+                                <option value="gbm-serisi">GBM Serisi</option>
+                                <option value="kompakto">Kompakto</option>
+                                <option value="proline">ProLine</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-block">
+                            <h4>Fiyat Aralığı</h4>
+                            <div class="filter-range">
+                                <input type="number" id="filter-price-min" placeholder="Min ₺">
+                                <input type="number" id="filter-price-max" placeholder="Max ₺">
+                            </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button class="btn btn-primary" type="button" id="filter-apply">Filtrele</button>
+                            <button class="btn" type="button" id="filter-save">Kaydet</button>
+                        </div>
+                    </aside>
+
+                    <div class="listing-content">
+                        <div class="listing-toolbar">
+                            <div>
+                                <div class="result-count" id="result-count">Toplam 128 ilan</div>
+                                <div class="active-filters" id="active-filters"></div>
+                            </div>
+                            <div class="toolbar-right">
+                                <span>Sıralama</span>
+                                <select>
+                                    <option>En Güncel</option>
+                                    <option>Fiyata Göre (Artan)</option>
+                                    <option>Fiyata Göre (Azalan)</option>
+                                    <option>En Çok İncelenen</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="listing-grid">
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product1/1.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">61 cm Disk Hidrolik Merdaneli Goble</a>
+                                        <span class="listing-badge">Sıfır</span>
+                                    </div>
+                                    <p class="listing-desc">Modern tarıma uygun, hidrolik kontrollü merdane ile homojen tohum yatağı hazırlığı.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: GBM226101</li>
+                                        <li><i class="bi bi-speedometer2"></i> 130-150 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2025</li>
+                                        <li><i class="bi bi-box-seam"></i> Stokta</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Konya / Karatay</span>
+                                        <span class="listing-id">İlan No: 100245</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">269.495 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product2/1.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">56 cm Disk Bağımsız Goble</a>
+                                        <span class="listing-badge alt">Revizyonlu</span>
+                                    </div>
+                                    <p class="listing-desc">Bağımsız yaylı diskler ile engebeli zeminlerde yüksek verim.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: GBM186101</li>
+                                        <li><i class="bi bi-speedometer2"></i> 90-110 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2024</li>
+                                        <li><i class="bi bi-gear"></i> Bakımlı</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Adana / Seyhan</span>
+                                        <span class="listing-id">İlan No: 100198</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">189.487 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product3/1.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">Hububat Ekim Mibzeri THM-22</a>
+                                        <span class="listing-badge">Sıfır</span>
+                                    </div>
+                                    <p class="listing-desc">Yüksek hassasiyetli ekim, daha az tohum kaybı ve hızlı kurulum.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: THM-22</li>
+                                        <li><i class="bi bi-speedometer2"></i> 75-90 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2026</li>
+                                        <li><i class="bi bi-award"></i> Garanti</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Şanlıurfa / Eyyübiye</span>
+                                        <span class="listing-id">İlan No: 100312</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">325.000 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product4/1.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">2'li Döner Kulaklı Pulluk</a>
+                                        <span class="listing-badge alt">İkinci El</span>
+                                    </div>
+                                    <p class="listing-desc">Ağır hizmet tipi gövde, taşlı araziler için güçlendirilmiş şase.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: DKP-02</li>
+                                        <li><i class="bi bi-speedometer2"></i> 70-85 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2023</li>
+                                        <li><i class="bi bi-tools"></i> Servisli</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Ankara / Polatlı</span>
+                                        <span class="listing-id">İlan No: 100144</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">193.698 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product5/1.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">Kompakto Serisi Tohum Yatağı Hazırlayıcı</a>
+                                        <span class="listing-badge">Sıfır</span>
+                                    </div>
+                                    <p class="listing-desc">Kompakt tasarım, düşük yakıt tüketimi ve hızlı saha performansı.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: KMP-610</li>
+                                        <li><i class="bi bi-speedometer2"></i> 80-100 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2025</li>
+                                        <li><i class="bi bi-lightning-charge"></i> Hızlı Teslimat</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Konya / Selçuklu</span>
+                                        <span class="listing-id">İlan No: 100287</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">214.900 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+
+                            <article class="listing-card" data-category="toprak-isleme" data-brand="tarimoz" data-model="gbm-serisi" data-price="269495" data-search="61 cm Disk Hidrolik Merdaneli Goble GBM226101">
+                                <a href="sayfa.html" class="listing-thumb">
+                                    <img src="img/products/product3/2.png" alt="">
+                                </a>
+                                <div class="listing-info">
+                                    <div class="listing-title-row">
+                                        <a href="sayfa.html" class="listing-title">Hidrolik Kontrollü Merdaneli Disk</a>
+                                        <span class="listing-badge alt">Revizyonlu</span>
+                                    </div>
+                                    <p class="listing-desc">Geniş iş genişliği, ağır topraklarda hızlı çalışma performansı.</p>
+                                    <ul class="listing-meta">
+                                        <li><i class="bi bi-tag"></i> Parça Kodu: HMD-500</li>
+                                        <li><i class="bi bi-speedometer2"></i> 110-130 HP</li>
+                                        <li><i class="bi bi-calendar3"></i> 2024</li>
+                                        <li><i class="bi bi-check2-circle"></i> Kontrol Edildi</li>
+                                    </ul>
+                                    <div class="listing-location">
+                                        <span><i class="bi bi-geo-alt"></i> Adana / Yüreğir</span>
+                                        <span class="listing-id">İlan No: 100322</span>
+                                    </div>
+                                </div>
+                                <div class="listing-price">
+                                    <span class="price">231.596 ₺</span>
+                                    <span class="price-note">KDV Dahil</span>
+                                    <a href="sayfa.html" class="btn btn-primary">Detay</a>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="listing-pagination">
+                            <button class="page-btn active" type="button">1</button>
+                            <button class="page-btn" type="button">2</button>
+                            <button class="page-btn" type="button">3</button>
+                            <button class="page-btn" type="button">4</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<!--! footer start  -->
+  <footer class="footer">
+    <div class="subscribe-row">
+      <div class="container">
+        <div class="footer-row-wrapper">
+          <div class="footer-subscribe-wrapper">
+            <div class="footer-subscribe">
+              <div class="footer-subscribe-top">
+                <h3 class="subscribe-title">Yeni ürünlerden haberdar olmak için e-posta hesabınızı giriniz.</h3>
+                <p class="subscribe-desc">İlk 1000₺ üzeri siparişinizde 100₺ indirim sağlayan bir kuponu e-postayla göndereceğiz.</p>
+              </div>
+              <div class="footer-subscribe-bottom">
+                <form>
+                  <input type="text" placeholder="E-posta hesabınızı girin">
+                  <button class="btn">Abone Ol</button>
+                </form>
+                <p class="privacy-text">
+                 Abone olarak <a href="#">Şartlar ve Koşullarımızı, Gizlilik ve Çerez Politikamızı</a> kabul etmiş olursunuz.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="footer-contact-wrapper">
+            <div class="footer-contact-top">
+              <h3 class="contact-title">
+                Yardıma mı ihtiyacınız var? <br>
+                (+90) 530 554 85 02
+              </h3>
+              <p class="contact-desc">08.30 - 18.30 arası ulaşabilirsiniz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="widgets-row">
+      <div class="container">
+        <div class="footer-widgets">
+          <div class="brand-info">
+            <div class="footer-logo">
+               <a href="index.html" class="logo">LOGO</a>
+            </div>
+            <div class="footer-desc">
+              <p>Mail üzerinden istek, öneri ve şikayetlerinizi bize iletebilirsiniz. <br> <br>Yüksek desili kargo katagorisine giren parçalar sisteme eklenmemiştir. Lütfen iletişime geçiniz.</p>
+            </div>
+            <div class="footer-contact">
+              <p>
+                <a href="tel:555 555 55 55">(+90) 530 554 85 02</a> – <a
+                  href="mailto:info@agrohero.com">info@agrohero.com</a>
+              </p>
+            </div>
+          </div>
+          <div class="widget-nav-menu">
+            <h4>Bilgilendirme</h4>
+            <ul class="menu-list">
+              <li>
+                <a href="#">Hakkımızda</a>
+              </li>
+              <li>
+                <a href="#">Gizlilik Politakası</a>
+              </li>
+              <li>
+                <a href="#">İade Politikası</a>
+              </li>
+              <li>
+                <a href="#">Nakliye Politikası</a>
+              </li>
+            </ul>
+          </div>
+          <div class="widget-nav-menu">
+            <h4>Account</h4>
+            <ul class="menu-list">
+              <li>
+                <a href="#">Kontrol Paneli</a>
+              </li>
+              <li>
+                <a href="#">Siparişlerim</a>
+              </li>
+              <li>
+                <a href="#">Beğendiklerim</a>
+              </li>
+              <li>
+                <a href="#">Hesap Detayları</a>
+              </li>
+              <li>
+                <a href="#">Siparişlerimi Kontrol Et</a>
+              </li>
+            </ul>
+          </div>
+          <div class="widget-nav-menu">
+            <h4>Mağaza</h4>
+            <ul class="menu-list">
+              <li>
+                <a href="#">Ortaklık</a>
+              </li>
+              <li>
+                <a href="#">En Çok Satanlar</a>
+              </li>
+              <li>
+                <a href="#">İndirim</a>
+              </li>
+              <li>
+                <a href="#">En Son Ürünler</a>
+              </li>
+              <li>
+                <a href="#">İndirimli Ürünler</a>
+              </li>
+            </ul>
+          </div>
+          <div class="widget-nav-menu">
+            <h4>Katagoriler</h4>
+            <ul class="menu-list">
+              <li>
+                <a href="#">Katagori 1</a>
+              </li>
+              <li>
+                <a href="#">Katagori 2</a>
+              </li>
+              <li>
+                <a href="#">Katagori 3</a>
+              </li>
+              <li>
+                <a href="#">Katagori 4</a>
+              </li>
+              <li>
+                <a href="#">Katagori 5</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright-row">
+      <div class="container">
+        <div class="footer-copyright">
+          <div class="site-copyright">
+            <p>
+              2026 © AgroHero | Tüm Hakları Saklıdır. <a href="#">Designed By Alper</a>
+            </p>
+          </div>
+          <a href="#">
+            <img src="img/cards.png" alt="">
+          </a>
+          <div class="footer-menu">
+            <ul class="footer-menu-list">
+              <li class="list-item">
+                <a href="#">Gizlilik Politakası</a>
+              </li>
+              <li class="list-item">
+                <a href="#">Şartlar ve Koşullar</a>
+              </li>
+              <li class="list-item">
+                <a href="#">İade Politikası</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!--! footer end  -->
+
+<!--!Mause Click script'i start -->
+
+    <div class="cursor-ball"></div>
+
+    <script src="cursor.js"></script>
+    <script src="script.js"></script>
+
+    <!--!Mause Click script'i end -->
+
+</body>
+
+</html>

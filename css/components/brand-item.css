@@ -1,0 +1,131 @@
+.brands {
+  margin: 48px 0;
+}
+
+.brand-wrapper {
+  overflow: hidden;
+  padding: 18px 0;
+  position: relative;
+  height: 170px;
+  border-radius: 28px;
+  background: transparent;
+}
+
+.brand-wrapper::before,
+.brand-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 140px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.brand-wrapper::before {
+  left: 0;
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.brand-wrapper::after {
+  right: 0;
+  background: linear-gradient(270deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.brands-scroll {
+  position: relative;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  --time: 45s !important;
+}
+
+.brand-track {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 0 40px;
+  animation: brandScroll var(--time) linear infinite;
+  animation-delay: calc(var(--time) * -1);
+}
+
+.brand-track:nth-child(2) {
+  animation-name: brandScroll2;
+  animation-delay: calc(var(--time) / -2);
+}
+
+.brand-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  height: 90px;
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.brand-item img {
+  max-height: 58px;
+  max-width: 120px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease;
+}
+
+.brand-item:hover {
+  transform: translateY(-4px);
+  box-shadow: none;
+}
+
+.brand-item:hover img {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1.05);
+}
+
+@keyframes brandScroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes brandScroll2 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .brand-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
+    height: 150px;
+  }
+
+  .brand-track {
+    gap: 24px;
+    padding: 0 24px;
+  }
+
+  .brand-item {
+    min-width: 140px;
+    height: 80px;
+  }
+
+  .brand-item img {
+    max-height: 48px;
+  }
+}

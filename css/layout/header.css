@@ -1,0 +1,310 @@
+/*! header start  */
+
+header {
+    background-color: #111 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    z-index: 999;
+}
+
+.header-center .menu-link,
+.header-right i,
+.logo {
+color: white !important;
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 128px;
+    width: auto;
+    display: block;
+}
+.global-notification {
+    background: #ff3700;  /* Turuncu tonu slider ile tam uyumlu olur */
+    padding: 14px 0;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+}
+
+.global-notification a {
+    color: white;
+    font-weight: 600;
+}
+
+.header-row {
+    height: 90px;
+    display: flex;
+    align-items: center;
+}
+
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-mobile {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+}
+
+.header-center .bi-x-circle {
+    display: none;
+}
+
+.header-center .navigation .menu-list {
+    display: flex;
+    column-gap: 30px;
+    align-items: center;
+}
+
+.header-center .menu-list .menu-link {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    position: relative;
+}
+
+.header-center .menu-list .menu-list-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 90px;
+}
+
+.header-center .menu-list .menu-link::after {
+    content: "";
+    width: 0;
+    height: 1px;
+    background-color: rgb(255, 55, 0);
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translate(-50%);
+    transition: .5s ease width;
+}
+
+.header-center .menu-list .menu-list-item:hover .menu-link::after {
+    width: 100%;
+}
+
+.header-center .menu-list .menu-link.active::after {
+    width: 100%;
+}
+
+.header-center .menu-list i {
+    font-size: 12px;
+
+}
+
+.header-right .header-right-links {
+    display: flex;
+    column-gap: 16px;
+    align-items: center;
+}
+
+.header-right .bi-person {
+    font-size: 23px;
+}
+
+.header-right .toggle-button {
+    border: none;
+    background-color: transparent;
+}
+
+.header-right i {
+    font-size: 18px;
+    display: flex;
+}
+
+.header-right .header-cart {
+    position: relative;
+}
+
+.header-right .header-cart-link .header-cart-count {
+    width: 16px;
+    height: 16px;
+    background-color: rgb(255, 55, 0);
+    color: #fff;
+    font-size: 10px;
+    border-radius: 100%;
+    position: absolute;
+    top: -11px;
+    right: -11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+/*? menu dropdown start */
+
+header .menu-dropdown-wrapper {
+    position: absolute;
+    top: 100%;
+    left: -30px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all .5s ease;
+    z-index: 1000;
+}
+
+header .menu-dropdown-content {
+    width: 220px;
+    background: #111;
+    border: 1px solid #111;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 0;
+}
+
+header .menu-dropdown-content a {
+    display: flex;
+    padding: 4px 30px;
+    font-size: 14px;
+    transition: color .5s ease;
+    color: white;
+}
+
+header .menu-dropdown-content a:hover {
+    color: #d65600;
+}
+
+.header-center .menu-list .menu-list-item:hover .menu-dropdown-wrapper {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.menu-dropdown-megamenu {
+    background-color: #111;
+    border: 1px solid #111;
+    padding: 22px;
+    display: flex;
+    column-gap: 50px;
+    z-index: 1000;
+    position: relative;
+}
+
+.menu-dropdown-megamenu .megamenu-products-title {
+    color: white;
+}
+
+.menu-dropdown-megamenu a{
+    color: white;
+}
+
+
+.megamenu-wrapper .menu-dropdown-wrapper {
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.megamenu-wrapper {
+    position: static !important;
+}
+
+.megamenu-wrapper .megamenu-links {
+    display: flex;
+    column-gap: 50px;
+}
+
+.megamenu-wrapper .megamenu-products-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    transition: .2s ease all;
+}
+
+.megamenu-wrapper .megamenu-menu-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+}
+
+.megamenu-wrapper .megamenu-menu-list a {
+    font-size: 14px;
+}
+
+.megamenu-wrapper .megamenu-single-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
+.megamenu-wrapper .megamenu-single-subtitle {
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    color: white;
+}
+
+.megamenu-wrapper .megamenu-single-button {
+    margin-top: 5px;
+}
+
+/*? menu dropdown stop */
+
+
+/*! header end  */
+
+
+
+/*! Header responsive */
+
+
+@media (max-width: 650px) {
+    .header-center {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        background-color: #fff;
+        border-right: 1px solid #dee0ea;
+    }
+
+    .header-center .bi-x-circle {
+        display: inline-block;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .header-center .menu-list {
+        flex-direction: column;
+        padding: 50px 75px;
+    }
+
+    .header-mobile {
+        display: inline-block;
+    }
+
+    .header-mobile .bi-list{
+        color: white;
+    }
+
+    header .menu-dropdown-wrapper {
+        display: none !important;
+    }
+
+    header .menu-list i {
+        display: none;
+    }
+
+    header .menu-list-item a {
+        font-size: 16px !important;
+    }
+}

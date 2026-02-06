@@ -1,0 +1,198 @@
+.slider {
+    position: relative;
+}
+
+.slider-elements {
+    position: relative;
+    height: calc(100vh - 137px);
+}
+
+.slider-item {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+}
+
+.slider-item.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+.slider-item .slider-image {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Görselin kendisi */
+.slider-item .slider-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60%; 
+    display: block;
+}
+
+/* .slider-item .container{
+    border: 1px solid rgba(0,0,0,0.6);
+    border-radius: 20px;                // Eğer yazı arkasında black border istiyorsam açıcam
+    background-color: rgba(0,0,0,0.6);
+    border-left: 00px;
+} */
+
+.slider-item .slider-title {
+    text-decoration: underline;
+    text-decoration-color: white;
+    font-size: 18px;
+    font-weight: 500;
+    color: rgb(255, 55, 0);
+}
+
+.slider-item .slider-heading {
+    text-decoration: underline; 
+    text-decoration-color: white;
+    font-size: 60px;
+    font-weight: 600;
+    color: rgb(255, 55, 0);
+    margin-top: 10px ;
+}
+
+.slider-item a {
+    z-index: 1;
+    position: relative;
+}
+
+.down-button {
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.down-button button {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: rgb(255, 55, 0);
+    transition: .5s ease all;
+}
+
+.down-button button:hover {
+    color: white;
+    transform: scale(1.2);
+}
+
+.down-button i {
+    font-size: 40px;
+    animation: downBounce 1.3s infinite ease-in-out;
+}
+
+@keyframes downBounce {
+    0%{
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+    50%{
+        transform: translateY(10px);
+        opacity: 1;
+    }
+    100%{
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+}
+
+.slider .slider-buttons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 2;
+}
+
+.slider .slider-buttons button {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    opacity: 0.6;
+    color: white;
+    background-color: rgba(0,0,0,0.9);
+    transition: .4s ease all;
+}
+
+.slider .slider-buttons button:hover {
+    background-color: rgb(255, 55, 0);
+    opacity: 1;
+    color: white;
+}
+
+.slider-buttons button i {
+    font-size: 20px;
+}
+
+.slider .slider-dots {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 6px;
+    z-index: 2;
+}
+
+.slider .slider-dots .slider-dot {
+    background: transparent;
+    border: none;
+    display: flex;
+    opacity: 0.4;
+    transition: .3s ease opacity;
+}
+
+.slider .slider-dots .slider-dot:hover {
+    opacity: 1;
+}
+
+.slider .slider-dots .slider-dot span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: rgb(255, 55, 0);
+    border-radius: 100%;
+}
+
+.slider .slider-dots .slider-dot.active span {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgb(255, 55, 0);
+}
+
+@media (max-width: 768px){
+    .slider-elements{
+        height: calc(100vh - 155px);
+    }
+    .slider-buttons{
+        display: none !important;
+    }
+    .down-button {
+        display: none;
+    }
+}
+
